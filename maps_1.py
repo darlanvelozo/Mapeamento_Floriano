@@ -1,6 +1,8 @@
 from numpy import sin, cos, arccos, pi, round
 import pandas as pd
 
+# funções matematicas para calcular distancia a partir da longitude e latitude
+#=========================================================================================================#  
 def rad2deg(radians):
     degrees = radians * 180 / pi
     return degrees
@@ -19,13 +21,13 @@ def getDistanceBetweenPointsNew(latitude1, longitude1, latitude2, longitude2, un
             (cos(deg2rad(latitude1)) * cos(deg2rad(latitude2)) * cos(deg2rad(theta)))
         )
     )
-    
     if unit == 'miles':
         return round(distance, 2)
     if unit == 'kilometers':
         return round(distance * 1.609344, 2)
+#=========================================================================================================#  
 
-
+# estrutura de dados em forma de lista [id, nome, latitude, longitude, id_pontos_alcancaveis]
 map = [
 [1, 'Rua A', -6.770560 ,-43.030300, [2, 18, 20, 30, 31]],
 [2,'Rua B', -6.771646,-43.030823, [1,27,18,3]], 
@@ -59,34 +61,94 @@ map = [
 [30, 'Rua ZD',-6.769519,-43.030435, [21,19,22,1]],
 [31,'Rua ZE', -6.7707038, -43.0314517, [1,27,24,22]]
 ]
+
+#nova lista com as distancias para cada ponto
 n_map = []
 
-
+# localiza o item da estrutura de dados pelo ID
 def loc_id(lista, id):
     for i in range(len(lista)):
         if id == lista[i][0]:
             return lista[i]
 
+# estrutura de repetição que gera uma lista a partir da lista principal map, agora adicionando as distancias
 for i in range(len(map)):
     dist=[]
     for j in range(len(map[i][4])):
         id = map[i][4][j]
-        dist.append([map[map[i][4][j]-1][1],getDistanceBetweenPointsNew(map[i][2], map[i][3], loc_id(map,map[i][4][j])[2], loc_id(map,map[i][4][j])[3])*1000])
-    
+        dist.append([loc_id(map, id)[1],getDistanceBetweenPointsNew(map[i][2], map[i][3], loc_id(map,map[i][4][j])[2], loc_id(map,map[i][4][j])[3])*1000])
+        
      
     
     n_map.append([map[i][0],map[i][1],map[i][2],map[i][3],map[i][4], dist])
     
-
-print(loc_id(map, 30)[2])
+# função para calcular distancia entre 2 pontos a partir do id
+def distancia_AB(id1, id2):
     
-    
-'''
-print(getDistanceBetweenPointsNew(map[0][2], map[0][3], map[map[0][4][0]][2], map[map[0][4][0]][3]))'''
+    a = loc_id(map, id1)
+    b = loc_id(map, id2)
+    distancia_AB = getDistanceBetweenPointsNew(a[2], a[3], b[2], b[3])
         
 
+    return distancia_AB*1000
+    
+# função que retorna o ponto mais proximo em linha reta em relação ao destino final
+def proximidade(id1, id2):
+    
+    percuso = []
+     
+    a = loc_id(map, id1)
+    b = loc_id(map, id2)
+   
+    for i in range(len(a[4])):
+       percuso.append([distancia_AB(a[4][i], b[0]), a[4][i]])
+       
+       
+    
+       
+    return [min(percuso)]
+
+# função que retorna os pontos percorridos em relação ao destino
+def melhor_caminho(a, b):
+    
+    
+    pontos = []
+    pontos.insert(0, [0, a])
+    while True:
+        p_final = loc_id(n_map, b)
+        if b in loc_id(n_map, a)[4] and a in p_final[4]:
+            
+            break
+        else:
+            pontos.append(proximidade(a, b)[0])
+            a = proximidade(a, b)[0][1]
+    pontos.append([0,b])    
+    return pontos
+
+# função que calcula a distancia percorrida e retorna o trajeto em forma de lista. ex: [500.0, [id1, id2, id3]]
+def percurso_distancia(lista_melhor_caminho):
+    distancia_percorrida = 0
+    lista = lista_melhor_caminho
+    pontos_percorridos = []
+    
+    for i in range(len(lista)-1):
+        a = loc_id(n_map, lista[i][1])
+        b = loc_id(n_map, lista[i+1][1])
+        pontos_percorridos.append(a[0])
+        distancia_percorrida += distancia_AB(a[0], b[0])
+        if i == len(lista)-2:
+            pontos_percorridos.append(b[0])
+
+    return [distancia_percorrida, pontos_percorridos]
+
+# id dos pontos que o usuario deseja partir(a) e o ponto de chegada(b)
+a = int(input("id A: "))
+b = int(input("id B: "))
+
+print(percurso_distancia(melhor_caminho(a, b)))
+
+#visualização em tabela pelo pandas
 df = pd.DataFrame(n_map,columns=['id', 'nome', 'latitude', 'longitude', 'pontos_alcancaveis', 'distancia'])
-
-print(df)
-
 df.to_csv("table.csv")
+
+
