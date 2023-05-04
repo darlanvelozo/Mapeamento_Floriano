@@ -142,10 +142,19 @@ def percurso_distancia(lista_melhor_caminho):
     return [distancia_percorrida, pontos_percorridos]
 
 # id dos pontos que o usuario deseja partir(a) e o ponto de chegada(b)
-a = int(input("id A: "))
-b = int(input("id B: "))
+a = int(input("id do ponto de partida: "))
+b = int(input("id do ponto de destino: "))
 
-print(percurso_distancia(melhor_caminho(a, b)))
+#Prints para exibição das informações no terminal
+#=======================================================================================#
+print('\nDistancia percorrida em metros: ',percurso_distancia(melhor_caminho(a, b))[0])
+print('\nTotal de pontos percorridos: ',len(percurso_distancia(melhor_caminho(a, b))[1]))
+print('\nTrajeto de pontos passados por id: ',percurso_distancia(melhor_caminho(a, b))[1])
+
+print('\n\nNome das ruas percorridas na sequencia: ')
+for i in range(len(percurso_distancia(melhor_caminho(a, b))[1])):
+    print('ponto ',i+1,':',loc_id(n_map, percurso_distancia(melhor_caminho(a, b))[1][i])[1], '(id=',loc_id(n_map, percurso_distancia(melhor_caminho(a, b))[1][i])[0],')')
+#=======================================================================================#
 
 #visualização em tabela pelo pandas
 df = pd.DataFrame(n_map,columns=['id', 'nome', 'latitude', 'longitude', 'pontos_alcancaveis', 'distancia'])
