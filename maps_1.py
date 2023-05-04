@@ -103,14 +103,10 @@ def proximidade(id1, id2):
     for i in range(len(a[4])):
        percuso.append([distancia_AB(a[4][i], b[0]), a[4][i]])
        
-       
-    
-       
     return [min(percuso)]
 
 # função que retorna os pontos percorridos em relação ao destino
 def melhor_caminho(a, b):
-    
     
     pontos = []
     pontos.insert(0, [0, a])
@@ -145,16 +141,18 @@ def percurso_distancia(lista_melhor_caminho):
 a = int(input("id do ponto de partida: "))
 b = int(input("id do ponto de destino: "))
 
-#Prints para exibição das informações no terminal
+#função para exibir as informações
 #=======================================================================================#
-print('\nDistancia percorrida em metros: ',percurso_distancia(melhor_caminho(a, b))[0])
-print('\nTotal de pontos percorridos: ',len(percurso_distancia(melhor_caminho(a, b))[1]))
-print('\nTrajeto de pontos passados por id: ',percurso_distancia(melhor_caminho(a, b))[1])
+def exibir(a, b):
+    print('\nDistancia percorrida em metros: ',percurso_distancia(melhor_caminho(a, b))[0])
+    print('\nTotal de pontos percorridos: ',len(percurso_distancia(melhor_caminho(a, b))[1]))
+    print('\nTrajeto de pontos passados por id: ',percurso_distancia(melhor_caminho(a, b))[1])
+    print('\n\nNome das ruas percorridas na sequencia: ')
+    for i in range(len(percurso_distancia(melhor_caminho(a, b))[1])):
+        print('ponto ',i+1,':',loc_id(n_map, percurso_distancia(melhor_caminho(a, b))[1][i])[1], '(id=',loc_id(n_map, percurso_distancia(melhor_caminho(a, b))[1][i])[0],')')
+#=======================================================================================#
 
-print('\n\nNome das ruas percorridas na sequencia: ')
-for i in range(len(percurso_distancia(melhor_caminho(a, b))[1])):
-    print('ponto ',i+1,':',loc_id(n_map, percurso_distancia(melhor_caminho(a, b))[1][i])[1], '(id=',loc_id(n_map, percurso_distancia(melhor_caminho(a, b))[1][i])[0],')')
-#=======================================================================================#
+exibir(a,b)
 
 #visualização em tabela pelo pandas
 df = pd.DataFrame(n_map,columns=['id', 'nome', 'latitude', 'longitude', 'pontos_alcancaveis', 'distancia'])
