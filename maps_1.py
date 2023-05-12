@@ -136,9 +136,6 @@ def percurso_distancia(lista_melhor_caminho):
 
     return [distancia_percorrida, pontos_percorridos]
 
-# entrada de dados por id dos pontos que o usuario deseja partir(a) e o ponto de chegada(b)
-a = int(input("id do ponto de partida: "))
-b = int(input("id do ponto de destino: "))
 
 #função para exibir as informações
 #=======================================================================================#
@@ -151,7 +148,26 @@ def exibir(a, b):
         print('ponto ',i+1,':',loc_id(n_map, percurso_distancia(melhor_caminho(a, b))[1][i])[1], '(id=',loc_id(n_map, percurso_distancia(melhor_caminho(a, b))[1][i])[0],')')
 #=======================================================================================#
 
-exibir(a,b)
+while True:
+    decisao = str(input('\n\nVoce deseja Visualizar suas opções de percursos? [s]=sim / [n]=não: '))
+    
+    if decisao == 's':
+        for i in range(len(map)):
+            print('Nome: ',map[i][1], ' / id: ',map[i][0])
+        # entrada de dados por id dos pontos que o usuario deseja partir(a) e o ponto de chegada(b)
+        a = int(input("id do ponto de partida: "))
+        b = int(input("id do ponto de destino: "))
+        exibir(a,b)
+    elif decisao == 'n':
+        print('\nFinalizado')
+        break
+    else:
+        print('\nDigite [s] para sim ou [n] para não')
+    
+    
+    
+    
+    
 #visualização em tabela pelo pandas
 df = pd.DataFrame(n_map,columns=['id', 'nome', 'latitude', 'longitude', 'pontos_alcancaveis', 'distancia'])
 df.to_csv("table.csv", index=0)
