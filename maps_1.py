@@ -78,10 +78,8 @@ for i in range(len(map)):
         id = map[i][4][j]
         dist.append([loc_id(map, id)[1],getDistanceBetweenPointsNew(map[i][2], map[i][3], loc_id(map,map[i][4][j])[2], loc_id(map,map[i][4][j])[3])*1000])
         
-     
-    
     n_map.append([map[i][0],map[i][1],map[i][2],map[i][3],map[i][4], dist])
-    
+   
 # função para calcular distancia entre 2 pontos a partir do id
 def distancia_AB(id1, id2):
     
@@ -114,11 +112,12 @@ def melhor_caminho(a, b):
         p_final = loc_id(n_map, b)
         if b in loc_id(n_map, a)[4] and a in p_final[4]:
             
+            pontos.append([0,b])
             break
         else:
             pontos.append(proximidade(a, b)[0])
             a = proximidade(a, b)[0][1]
-    pontos.append([0,b])    
+        
     return pontos
 
 # função que calcula a distancia percorrida e retorna o trajeto em forma de lista. ex: [500.0, [id1, id2, id3]]
@@ -137,7 +136,7 @@ def percurso_distancia(lista_melhor_caminho):
 
     return [distancia_percorrida, pontos_percorridos]
 
-# id dos pontos que o usuario deseja partir(a) e o ponto de chegada(b)
+# entrada de dados por id dos pontos que o usuario deseja partir(a) e o ponto de chegada(b)
 a = int(input("id do ponto de partida: "))
 b = int(input("id do ponto de destino: "))
 
@@ -153,9 +152,8 @@ def exibir(a, b):
 #=======================================================================================#
 
 exibir(a,b)
-
 #visualização em tabela pelo pandas
 df = pd.DataFrame(n_map,columns=['id', 'nome', 'latitude', 'longitude', 'pontos_alcancaveis', 'distancia'])
-df.to_csv("table.csv")
+df.to_csv("table.csv", index=0)
 
 
