@@ -76,7 +76,7 @@ for i in range(len(map)):
     dist=[]
     for j in range(len(map[i][4])):
         id = map[i][4][j]
-        dist.append([loc_id(map, id)[1],getDistanceBetweenPointsNew(map[i][2], map[i][3], loc_id(map,map[i][4][j])[2], loc_id(map,map[i][4][j])[3])*1000])
+        dist.append([loc_id(map, id)[0],getDistanceBetweenPointsNew(map[i][2], map[i][3], loc_id(map,map[i][4][j])[2], loc_id(map,map[i][4][j])[3])*1000])
         
     n_map.append([map[i][0],map[i][1],map[i][2],map[i][3],map[i][4], dist])
    
@@ -91,7 +91,7 @@ def distancia_AB(id1, id2):
     return distancia_AB*1000
     
 # função que retorna o ponto mais proximo em linha reta em relação ao destino final
-def proximidade(id1, id2):
+def proximidade(id1, id2): 
     
     percuso = []
      
@@ -163,9 +163,6 @@ while True:
         break
     else:
         print('\nDigite [s] para sim ou [n] para não')
-    
-    
-    
     
     
 #visualização em tabela pelo pandas
